@@ -53,6 +53,7 @@ void Create2DArray()
     c = sizeof(*BA2);
     total_mem = element * c;
     BA2 = (int *)malloc(total_mem);
+    printf("\nBA2 = %p", &BA2);
 }
 void A2(int i, int j, int x)
 {
@@ -72,6 +73,7 @@ void Create3DArray()
     c = sizeof(*BA3);
     total_mem = element * c;
     BA3 = (int *)malloc(total_mem);
+    printf("\nBA3 = %p", &BA3);
 }
 void A3(int i, int j, int k, int x)
 {
