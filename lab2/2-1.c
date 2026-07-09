@@ -33,12 +33,14 @@ void Create1DArray()
     c = sizeof(*BA1);               // Calculate Size each block of Array
     total_mem = element * c;        // Calculate Total Size
     BA1 = (int *)malloc(total_mem); // Memory allocate and use  BA1 point its
-    printf("Element = %d", element);
+
+    printf("Create1DArray");
+    printf("\nElement = %d", element);
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA1);
     printf("\nMemory End = %p", (void *)((char *)BA1 + total_mem - 1));
-    printf("\n");
+    printf("\n\n");
 }
 void A1(int i, int x)
 {                      // Put data into Array 1 Dimension
@@ -58,13 +60,13 @@ void Create2DArray()
     c = sizeof(*BA2);
     total_mem = element * c;
     BA2 = (int *)malloc(total_mem);
-    
-    printf("Element = %d", element);
+    printf("Create2DArray");
+    printf("\nElement = %d", element);
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA2);
     printf("\nMemory End = %p", (void *)((char *)BA2 + total_mem - 1));
-    printf("\n");
+    printf("\n\n");
 }
 
 //------------------------------------------------------
@@ -90,13 +92,13 @@ void Create3DArray()
     c = sizeof(*BA3);
     total_mem = element * c;
     BA3 = (int *)malloc(total_mem);
-
-    printf("Element = %d", element);
+    printf("Create3DArray");
+    printf("\nElement = %d", element);
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA3);
     printf("\nMemory End = %p", (void *)((char *)BA3 + total_mem - 1));
-    printf("\n");
+    printf("\n\n");
 }
 
 //------------------------------------------------------
@@ -122,8 +124,8 @@ void Create3DArray_way2()
     c = sizeof(*BA4);
     total_mem = element * c;
     BA4 = (int *)malloc(total_mem);
-
-    printf("Element = %d", element);
+    printf("Create3DArray_way2");
+    printf("\nElement = %d", element);
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA4);
