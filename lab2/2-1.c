@@ -33,7 +33,6 @@ void Create1DArray()
     c = sizeof(*BA1);               // Calculate Size each block of Array
     total_mem = element * c;        // Calculate Total Size
     BA1 = (int *)malloc(total_mem); // Memory allocate and use  BA1 point its
-    printf("BA1 = %p", &BA1);
 }
 void A1(int i, int x)
 {                      // Put data into Array 1 Dimension
@@ -53,7 +52,6 @@ void Create2DArray()
     c = sizeof(*BA2);
     total_mem = element * c;
     BA2 = (int *)malloc(total_mem);
-    printf("\nBA2 = %p", &BA2);
 }
 void A2(int i, int j, int x)
 {
@@ -73,7 +71,6 @@ void Create3DArray() // (Plane-Row-Column)
     c = sizeof(*BA3);
     total_mem = element * c;
     BA3 = (int *)malloc(total_mem);
-    printf("\nBA3 = %p", &BA3);
 }
 void A3(int i, int j, int k, int x)
 {
@@ -93,7 +90,6 @@ void Create3DArray_way2() //(Row-Plane-Column)
     c = sizeof(*BA4);
     total_mem = element * c;
     BA4 = (int *)malloc(total_mem);
-    printf("\nBA4 = %p", &BA4);
 }
 void A3_way2(int i, int j, int k, int x)
 {
@@ -119,23 +115,31 @@ int main()
     i = 2;
     A1(i, 9);
     printf("\nA1(%d) = %d ", i, ReadA1(i));
+    printf("BA1 = %p\n", (void *)BA1);
+    printf("\n");
     // Using 2 Dimension Array ...
     i = 2;
     j = 3;
     A2(i, j, 99);
     printf("\nA2(%d,%d) = %d ", i, j, ReadA2(i, j));
+    printf("BA2 = %p\n", (void *)BA2);
+    printf("\n");
     // Using 3 Dimension Array...
     i = 3;
     j = 4;
     k = 5;
     A3(i, j, k, 999);
     printf("\nA3(%d,%d,%d) = %d ", i, j, k, ReadA3(i, j, k));
+    printf("BA3 = %p\n", (void *)BA3);
+    printf("\n");
     // Using 3 Dimension Array way 2...
     i = 3;
     j = 4;
     k = 5;
     A3_way2(i, j, k, 999);
     printf("\nA3_way2(%d,%d,%d) = %d ", i, j, k, ReadA3_way2(i, j, k));
+    printf("BA4 = %p\n", (void *)BA4);
+    printf("\n");
     getch();   // Wait for KBD hit
     free(BA1); // Free memory of each array
     free(BA2);
