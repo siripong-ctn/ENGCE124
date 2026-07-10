@@ -24,6 +24,14 @@ A(i,j,k)=BA+(i-l1)*(u2-l2+1)(u3-l3+1)C+(j-l2)(u3-l3+1)C+(k-l3)C
 #define u2 4              // Upper Bound 2
 #define l3 1              // Lower Bound 3
 #define u3 5              // Upper Bound 3
+
+#define l1_w2 1
+#define u1_w2 4
+#define l2_w2 1
+#define u2_w2 5
+#define l3_w2 1
+#define u3_w2 6
+
 int *BA1, *BA2, *BA3, *BA4, *p; // Base address of each dimension and moving pointer
 int i, j, k;              // subscript of Array
 void Create1DArray()
@@ -39,7 +47,7 @@ void Create1DArray()
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA1);
-    printf("\nMemory End = %p", (void *)((char *)BA1 + total_mem - 1));
+    printf("\nMemory End = %p", (void *)((char *)BA1 + total_mem));
     printf("\n\n");
 }
 void A1(int i, int x)
@@ -65,7 +73,7 @@ void Create2DArray()
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA2);
-    printf("\nMemory End = %p", (void *)((char *)BA2 + total_mem - 1));
+    printf("\nMemory End = %p", (void *)((char *)BA2 + total_mem));
     printf("\n\n");
 }
 
@@ -97,7 +105,7 @@ void Create3DArray()
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA3);
-    printf("\nMemory End = %p", (void *)((char *)BA3 + total_mem - 1));
+    printf("\nMemory End = %p", (void *)((char *)BA3 + total_mem));
     printf("\n\n");
 }
 
@@ -120,7 +128,7 @@ int ReadA3(int i, int j, int k)
 void Create3DArray_way2()
 {
     int element, c, total_mem;
-    element = (u1 - l1 + 1) * (u2 - l2 + 1) * (u3 - l3 + 1);
+    element = (u1_w2-l1_w2+1) * (u2_w2-l2_w2+1) * (u3_w2-l3_w2+1);
     c = sizeof(*BA4);
     total_mem = element * c;
     BA4 = (int *)malloc(total_mem);
@@ -129,21 +137,21 @@ void Create3DArray_way2()
     printf("\nBytes/Element = %d", c);
     printf("\nTotal Memory = %d x %d = %d", element, c, total_mem);
     printf("\nMemory Start = %p",(void *)BA4);
-    printf("\nMemory End = %p", (void *)((char *)BA4 + total_mem - 1));
+    printf("\nMemory End = %p", (void *)((char *)BA4 + total_mem));
     printf("\n");
 }
 
 //------------------------------------------------------
 void A3_way2(int i, int j, int k, int x)
 {
-    p = BA4 +((j - l2) * (u1 - l1 + 1) * (u3 - l3 + 1)+ (i - l1) * (u3 - l3 + 1)+ (k - l3));
+    p = BA4 + ((j-l2_w2)*(u1_w2-l1_w2+1)*(u3_w2-l3_w2+1) +(i-l1_w2)*(u3_w2-l3_w2+1) +(k-l3_w2));
     *p = x;
 }
 
 //------------------------------------------------------
 int ReadA3_way2(int i, int j, int k)
 {
-    p = BA4 +((j - l2) * (u1 - l1 + 1) * (u3 - l3 + 1)+ (i - l1) * (u3 - l3 + 1)+ (k - l3));
+    p = BA4 + ((j-l2_w2)*(u1_w2-l1_w2+1)*(u3_w2-l3_w2+1) +(i-l1_w2)*(u3_w2-l3_w2+1) +(k-l3_w2));
     return *p;
 }
 
@@ -173,9 +181,10 @@ int main()
     A3(i, j, k, 999);
     printf("\nA3(%d,%d,%d) = %d ", i, j, k, ReadA3(i, j, k));
     // Using 3 Dimension Array way 2...
-    i = 3;
-    j = 4;
-    k = 5;
+
+    i = 4;
+    j = 5;
+    k = 6;
     A3_way2(i, j, k, 999);
     printf("\nA3_way2(%d,%d,%d) = %d ", i, j, k, ReadA3_way2(i, j, k));
     printf("\n");
