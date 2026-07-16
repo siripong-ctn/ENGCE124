@@ -25,13 +25,6 @@ A(i,j,k)=BA+(i-l1)*(u2-l2+1)(u3-l3+1)C+(j-l2)(u3-l3+1)C+(k-l3)C
 #define l3 1              // Lower Bound 3
 #define u3 5              // Upper Bound 3
 
-#define l4 1
-#define u4 4
-#define l5 1
-#define u5 5
-#define l6 1
-#define u6 6
-
 int *BA1, *BA2, *BA3, *BA4, *p; // Base address of each dimension and moving pointer
 int i, j, k;              // subscript of Array
 void Create1DArray()
@@ -112,14 +105,22 @@ void Create3DArray()
 //------------------------------------------------------
 void A3(int i, int j, int k, int x)
 {
-    p = BA3 +((i - l1) * (u2 - l2 + 1) * (u3 - l3 + 1)+ (j - l2) * (u3 - l3 + 1)+ (k - l3));
+    int offset;
+    offset = (i-l1)*(u2-l2+1)*(u3-l3+1)+ (j-l2)*(u3-l3+1)+ (k-l3);
+    p = BA3 + offset;
     *p = x;
+
+    printf("\nA3 Offset = %d", offset);
+    printf("\nA3 Address = %p", (void *)p);
 }
 
 //------------------------------------------------------
 int ReadA3(int i, int j, int k)
 {
-    p = BA3 +((i - l1) * (u2 - l2 + 1) * (u3 - l3 + 1)+ (j - l2) * (u3 - l3 + 1)+ (k - l3));
+    int offset;
+    offset = (i-l1)*(u2-l2+1)*(u3-l3+1)+ (j-l2)*(u3-l3+1)+ (k-l3);
+    p = BA3 + offset;
+    printf("\nReadA3 Address = %p", (void *)p);
     return *p;
 }
 //------------------------------------------------------
@@ -128,7 +129,7 @@ int ReadA3(int i, int j, int k)
 void Create3DArray_way2()
 {
     int element, c, total_mem;
-    element = (u4-l4+1) * (u5-l5+1) * (u6-l6+1);
+    element = (u1-l1+1) * (u2-l2+1) * (u3-l3+1);
     c = sizeof(*BA4);
     total_mem = element * c;
     BA4 = (int *)malloc(total_mem);
@@ -144,14 +145,21 @@ void Create3DArray_way2()
 //------------------------------------------------------
 void A3_way2(int i, int j, int k, int x)
 {
-    p = BA4 + ((j-l5)*(u4-l4+1)*(u6-l6+1) +(i-l4)*(u6-l6+1) +(k-l6));
+    int offset;
+    offset = (j-l2)*(u1-l1+1)*(u3-l3+1)+ (i-l1)*(u3-l3+1)+ (k-l3);
+    p = BA4 + offset;
     *p = x;
+    printf("\nA3_way2 Offset = %d", offset);
+    printf("\nA3_way2 Address = %p", (void *)p);
 }
 
 //------------------------------------------------------
 int ReadA3_way2(int i, int j, int k)
 {
-    p = BA4 + ((j-l5)*(u4-l4+1)*(u6-l6+1) +(i-l4)*(u6-l6+1) +(k-l6));
+    int offset;
+    offset = (j-l2)*(u1-l1+1)*(u3-l3+1)+ (i-l1)*(u3-l3+1)+ (k-l3);
+    p = BA4 + offset;
+    printf("\nReadA3_way2 Address = %p", (void *)p);
     return *p;
 }
 
@@ -175,16 +183,16 @@ int main()
     A2(i, j, 99);
     printf("\nA2(%d,%d) = %d ", i, j, ReadA2(i, j));
     // Using 3 Dimension Array...
-    i = 3;
-    j = 4;
-    k = 5;
+    i = 1;
+    j = 2;
+    k = 3;
     A3(i, j, k, 999);
     printf("\nA3(%d,%d,%d) = %d ", i, j, k, ReadA3(i, j, k));
     // Using 3 Dimension Array way 2...
 
-    i = 4;
-    j = 5;
-    k = 6;
+    i = 1;
+    j = 2;
+    k = 3;
     A3_way2(i, j, k, 999);
     printf("\nA3_way2(%d,%d,%d) = %d ", i, j, k, ReadA3_way2(i, j, k));
     printf("\n");
