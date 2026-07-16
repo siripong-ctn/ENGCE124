@@ -25,12 +25,12 @@ A(i,j,k)=BA+(i-l1)*(u2-l2+1)(u3-l3+1)C+(j-l2)(u3-l3+1)C+(k-l3)C
 #define l3 1              // Lower Bound 3
 #define u3 5              // Upper Bound 3
 
-#define l1_w2 1
-#define u1_w2 4
-#define l2_w2 1
-#define u2_w2 5
-#define l3_w2 1
-#define u3_w2 6
+#define l4 1
+#define u4 4
+#define l5 1
+#define u5 5
+#define l6 1
+#define u6 6
 
 int *BA1, *BA2, *BA3, *BA4, *p; // Base address of each dimension and moving pointer
 int i, j, k;              // subscript of Array
@@ -128,7 +128,7 @@ int ReadA3(int i, int j, int k)
 void Create3DArray_way2()
 {
     int element, c, total_mem;
-    element = (u1_w2-l1_w2+1) * (u2_w2-l2_w2+1) * (u3_w2-l3_w2+1);
+    element = (u4-l4+1) * (u5-l5+1) * (u6-l6+1);
     c = sizeof(*BA4);
     total_mem = element * c;
     BA4 = (int *)malloc(total_mem);
@@ -144,14 +144,14 @@ void Create3DArray_way2()
 //------------------------------------------------------
 void A3_way2(int i, int j, int k, int x)
 {
-    p = BA4 + ((j-l2_w2)*(u1_w2-l1_w2+1)*(u3_w2-l3_w2+1) +(i-l1_w2)*(u3_w2-l3_w2+1) +(k-l3_w2));
+    p = BA4 + ((j-l5)*(u4-l4+1)*(u6-l6+1) +(i-l4)*(u6-l6+1) +(k-l6));
     *p = x;
 }
 
 //------------------------------------------------------
 int ReadA3_way2(int i, int j, int k)
 {
-    p = BA4 + ((j-l2_w2)*(u1_w2-l1_w2+1)*(u3_w2-l3_w2+1) +(i-l1_w2)*(u3_w2-l3_w2+1) +(k-l3_w2));
+    p = BA4 + ((j-l5)*(u4-l4+1)*(u6-l6+1) +(i-l4)*(u6-l6+1) +(k-l6));
     return *p;
 }
 
