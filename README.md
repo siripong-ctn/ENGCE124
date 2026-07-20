@@ -1,2 +1,1 @@
-# ENGCE124
-Data strcutures and algorithms
+# ENGCE124 - Data Structures and Algorithms
