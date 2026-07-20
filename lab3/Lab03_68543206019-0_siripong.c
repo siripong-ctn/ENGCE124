@@ -20,9 +20,7 @@ int queueCount = 0;
 
 void showProgramHeader(const char title[])
 {
-    printf("\n====================================\n");
-    printf("%s\n", title);
-    printf("====================================\n");
+    printf("\n========== %s ==========\n",title);
 }
 
 void clearArray(int arr[], int size)
@@ -347,6 +345,20 @@ void showQueue(void)
         else
             printf("[%d] ", queue[i]);
     }
+    printf("\n");
+    printf("        ");
+
+    for(i = 0 ; i < MAX_SIZE ; i++)
+    {
+        if(i == front && i == rear)
+            printf("FR   ");
+        else if(i == front)
+            printf("  F  ");
+        else if(i == rear)
+            printf("  R  ");
+        else
+            printf("     ");
+    }
 
     printf("\n");
 
@@ -406,6 +418,12 @@ void stackMenu(void)
             case 4:
                 clearStack();
                 break;
+
+            case 0:
+                break;
+
+            default:
+                printf("\nInvalid menu.\n");
         }
 
     }while(choice!=0);
@@ -448,6 +466,12 @@ void queueMenu(void)
             case 4:
                 clearQueue();
                 break;
+
+            case 0:
+                break;
+
+            default:
+                printf("\nInvalid menu.\n");
         }
 
     }while(choice!=0);
@@ -479,6 +503,12 @@ int main(void)
             case 2:
                 queueMenu();
                 break;
+
+            case 0:
+                break;
+
+            default:
+                printf("\nInvalid menu.\n");
         }
 
     }while(choice!=0);
