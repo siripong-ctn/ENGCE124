@@ -64,8 +64,7 @@ void push(int value) {
     char after[100];
     char detail[100];
 
-    sprintf(before,"Top = %d, Data = %d",
-            top, top + 1);
+    sprintf(before,"Top = %d, Data = %d",top, top + 1);
 
     if(isStackFull()) {
         printf("\nPush failed: Stack Overflow\n");
