@@ -9,7 +9,7 @@ Note.- Not allow to delete the HEAD Node
 #include <conio.h>    //use getch
 #include <stdlib.h>   //use molloc
 #define HeadData -999 // Special Data of Head Node
-typedef struct Node           // Declare structure of node
+typedef struct Node   // Declare structure of node
 {
     int info;
     struct Node *link;
@@ -67,9 +67,9 @@ void InsertAfter(int data1)
                 p = Allocate();             // Allocat one node from storage pool
                 printf("\nInsert data : "); // Input data for insert
                 scanf("%d", &temp);         // Read from KBD
-                p->info = temp;          // Entry temporary data into INFO of node
+                p->info = temp;             // Entry temporary data into INFO of node
                 p->link = H1->link;         // Change pointer 1st for insert node(FAR)
-                H1->link = p; // Change pointer 2nd for insert node (NEAR)
+                H1->link = p;               // Change pointer 2nd for insert node (NEAR)
             } // End if
             H1 = H1->link; // Skip H1 to next node
         } // End while
@@ -96,7 +96,7 @@ void DeleteAfter(int data1)
                         H1->link = H; // Set link of H1 to Head node
                     else
                         H1->link = p->link; // If not set link of H1 point same address of p
-                        free(p); // Free node to storage pool
+                    free(p);                // Free node to storage pool
                 } // End if2
             } // End if1
             H1 = H1->link; // Skip H1 to next node
@@ -108,7 +108,7 @@ int main() // MAIN Fn.
     p = Allocate();     // Create HEAD Node
     p->info = HeadData; // Assign Special data
     p->link = p;        // Link back to Node
-    n = 10;          // Set amount of node
+    n = 10;             // Set amount of node
     CreateNNode(n);     // Call Fn. Create N nodes
     printf("PROGRAM SINGLY CIRCULAR LINKED LIST \n");
     printf("======================================== \n");
