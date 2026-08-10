@@ -9,7 +9,7 @@ Note.- Not allow to delete the HEAD Node
 #include <conio.h>    //use getch
 #include <stdlib.h>   //use molloc
 #define HeadData -999 // Special Data of Head Node
-typedef struct Node   // Declare structure of node
+typedef struct Node         // Declare structure of node
 {
     int info;
     struct Node *link;
@@ -61,18 +61,18 @@ void InsertAfter(int data1)
     {
         H1 = H->link;                // Let H1 point at first node
         while (H1->info != HeadData) // Search for the data while INFO<> HeadData
-        {
-            if (H1->info == data1) // if Found
             {
-                p = Allocate();             // Allocat one node from storage pool
-                printf("\nInsert data : "); // Input data for insert
-                scanf("%d", &temp);         // Read from KBD
-                p->info = temp;             // Entry temporary data into INFO of node
-                p->link = H1->link;         // Change pointer 1st for insert node(FAR)
-                H1->link = p;               // Change pointer 2nd for insert node (NEAR)
-            } // End if
-            H1 = H1->link; // Skip H1 to next node
-        } // End while
+                if (H1->info == data1) // if Found
+                {
+                    p = Allocate();             // Allocat one node from storage pool
+                    printf("\nInsert data : "); // Input data for insert
+                    scanf("%d", &temp);         // Read from KBD
+                    p->info = temp;             // Entry temporary data into INFO of node
+                    p->link = H1->link;         // Change pointer 1st for insert node (FAR)
+                    H1->link = p; // Change pointer 2nd for insert node (NEAR)
+                } // End if
+                H1 = H1->link; // Skip H1 to next node
+            } // End while
     } // End IF
 } // End Fn.
 void DeleteAfter(int data1)
@@ -84,23 +84,23 @@ void DeleteAfter(int data1)
     {
         H1 = H->link;                // Let H1 point at start node
         while (H1->info != HeadData) // Search for the data while INFO<> HeadData
-        {
-            if (H1->info == data1) // if Found
             {
-                if (H1->link == H) // If no more node
-                    printf("This is the HEAD Node,Can't delete it!!!\n");
-                else
+                if (H1->info == data1) // if Found
                 {
-                    p = H1->link;     // Mark at node for Delete
-                    if (p->link == H) // If p is last node
-                        H1->link = H; // Set link of H1 to Head node
+                    if (H1->link == H) // If no more node
+                    printf ("This is the HEAD Node,Can't delete it!!!\n"); 
                     else
-                        H1->link = p->link; // If not set link of H1 point same address of p
-                    free(p);                // Free node to storage pool
-                } // End if2
-            } // End if1
-            H1 = H1->link; // Skip H1 to next node
-        } // End while
+                    {
+                        p = H1->link;     // Mark at node for Delete
+                        if (p->link == H) // If p is last node
+                            H1->link = H; // Set link of H1 to Head node
+                        else
+                            H1->link = p->link; // If not set link of H1 point same address of p
+                            free(p); // Free node to storage pool
+                    } //End if2
+                } // End if1
+                H1 = H1->link; // Skip H1 to next node
+            } // End while
     } // End IF
 } // End Fn.
 int main() // MAIN Fn.
@@ -117,7 +117,7 @@ int main() // MAIN Fn.
     ch = ' ';
     while (ch != 'E' && ch != 'e')
     {
-        printf("MENU : [I:Insert D:Delete E:Exit]: ");
+        printf("MENU : [I:Insert D:Delete E:Exit]");
         scanf(" %c", &ch); // GCC/MinGW not working for conio.h -> getch()
         switch (ch)
         {

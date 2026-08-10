@@ -7,7 +7,7 @@
 #include <stdio.h>  //use printf
 #include <conio.h>  //use getch
 #include <stdlib.h> //use molloc
-typedef struct Node   // Declare structure of node
+typedef struct Node         // Declare structure of node
 {
     int info;
     struct Node *link;
@@ -122,7 +122,7 @@ int main() // MAIN Fn.
         case 'i':
         case 'I':
             printf("\nInsert After data : "); // Input data for insert after
-            scanf("%d", &data);
+                scanf("%d", &data);
             InsertAfter(data); // Call Fn. Insert after data
             printf("\nAll Data in Linked List AFTER INSERTED\n");
             ShowAllNode(); // Call Fn. Show all node
@@ -130,7 +130,7 @@ int main() // MAIN Fn.
         case 'd':
         case 'D':
             printf("\nDelete After data : "); // Input data for Delete after
-            scanf("%d", &data);
+                scanf("%d", &data);
             DeleteAfter(data); // Call Fn. Delete after data
             printf("\nAll Data in Linked List AFTER DELETED\n");
             ShowAllNode(); // Call Fn. Show all node
