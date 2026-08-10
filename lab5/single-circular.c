@@ -115,13 +115,12 @@ int main() // MAIN Fn.
     printf("All Data in Linked List \n");
     ShowAllNode(); // Call Fn. Show all node
     ch = ' ';
-    while (ch != 'E' && ch != 'e')
+    while (ch != 'E')
     {
         printf("MENU : [I:Insert D:Delete E:Exit]");
         scanf(" %c", &ch); // GCC/MinGW not working for conio.h -> getch()
         switch (ch)
         {
-        case 'i':
         case 'I':
             printf("\nInsert After data : "); // Input data for insert after
             scanf("%d", &data);
@@ -129,7 +128,6 @@ int main() // MAIN Fn.
             printf("\nAll Data in Linked List AFTER INSERTED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
-        case 'd':
         case 'D':
             printf("\nDelete After data : "); // Input data for Delete after
             scanf("%d", &data);
