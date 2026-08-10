@@ -220,7 +220,7 @@ int main() // MAIN Fn.
     printf("All Data in Linked List \n");
     ShowAllNode(); // Call Fn. Show all node
     ch = ' ';
-    while (ch != 'E' && ch != 'e')
+    while (ch != 'E')
     {
         printf("MENU>> [B:InsertBefore A:InsertAfter\n");
         printf(" O:DeleteBefore X:Deleteitself D:DeleteAfter E:Exit]\n");
@@ -228,7 +228,6 @@ int main() // MAIN Fn.
         scanf(" %c", &ch); // GCC/MinGW not working for conio.h -> getch()
         switch (ch)
         {
-        case 'b':
         case 'B':
             printf("\nInsert Before data : "); // Input data for insert after
             scanf("%d", &data);
@@ -236,7 +235,6 @@ int main() // MAIN Fn.
             printf("\nAll Data in Linked List AFTER INSERTED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
-        case 'a':
         case 'A':
             printf("\nInsert After data : "); // Input data for insert after
             scanf("%d", &data);
@@ -244,7 +242,6 @@ int main() // MAIN Fn.
             printf("\nAll Data in Linked List AFTER INSERTED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
-        case 'o':
         case 'O':
             printf("\nDelete Before data : "); // Input data for Delete after
             scanf("%d", &data);
@@ -252,7 +249,6 @@ int main() // MAIN Fn.
             printf("\nAll Data in Linked List AFTER DELETED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
-        case 'x':
         case 'X':
             printf("\nDelete ItSelf data : "); // Input data for Delete after
             scanf("%d", &data);
@@ -260,7 +256,6 @@ int main() // MAIN Fn.
             printf("\nAll Data in Linked List ITSELF DELETED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
-        case 'd':
         case 'D':
             printf("\nDelete After data : "); // Input data for Delete after
             scanf("%d", &data);
