@@ -67,22 +67,27 @@ void CalPostfix(char postfix[80])
             {
             case '+':
                 value = pop2 + pop1; // Calculate
+                printf("%f\n", value);
                 push(value);         // Push value to Stack
                 break;
             case '-':
                 value = pop2 - pop1;
+                printf("%f\n", value);
                 push(value);
                 break;
             case '*':
                 value = pop2 * pop1;
+                printf("%f\n", value);
                 push(value);
                 break;
             case '/':
                 value = pop2 / pop1;
+                printf("%f\n", value);
                 push(value);
                 break;
             case '^':
                 value = pow(pop2, pop1);
+                printf("%f\n", value);
                 push(value);
                 break;
             }
