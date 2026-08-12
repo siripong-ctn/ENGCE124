@@ -121,14 +121,14 @@ int main() // MAIN Fn.
         {
         case 'I':
             printf("\nInsert After data : "); // Input data for insert after
-                scanf("%d", &data);
+            scanf("%d", &data);
             InsertAfter(data); // Call Fn. Insert after data
             printf("\nAll Data in Linked List AFTER INSERTED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
         case 'D':
             printf("\nDelete After data : "); // Input data for Delete after
-                scanf("%d", &data);
+            scanf("%d", &data);
             DeleteAfter(data); // Call Fn. Delete after data
             printf("\nAll Data in Linked List AFTER DELETED\n");
             ShowAllNode(); // Call Fn. Show all node
