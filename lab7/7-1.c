@@ -31,7 +31,7 @@ void ShowArray()
    {
       printf("[%i]%d \t", i, data[i]);
       i++;
-      if((i - 1) % 3 == 0) { // Show every 5 array[] then new line
+      if((i - 1) % 3 == 0) { // Show every 3 array[] then new line
          printf("\n");
       }
    }
