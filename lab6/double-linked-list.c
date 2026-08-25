@@ -227,7 +227,7 @@ void DeleteAfter(int data1)
 } // End Fn.
 int main() // MAIN Fn.
 {
-    n = 10;         // Set amount of node
+    n = 3;         // Set amount of node
     CreateNNode(n); // Call Fn. Create N nodes
     printf("PROGRAM DOUBLY LINKED LIST \n");
     printf("================================== \n");
@@ -243,10 +243,10 @@ int main() // MAIN Fn.
         switch (ch)
         {
         case 'B':
-            printf("\nInsert After data : "); // Input data for insert before
+            printf("\nInsert Before data : "); // Input data for insert before
                 scanf("%d", &data);
             InsertBefore(data); // Call Fn. Insert after data
-            printf("\nAll Data in Linked List AFTER INSERTED\n");
+            printf("\nAll Data in Linked List BEFORE INSERTED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
         case 'A':
@@ -260,7 +260,7 @@ int main() // MAIN Fn.
             printf("\nDelete Before data : "); // Input data for Delete after
                 scanf("%d", &data);
             DeleteBefore(data); // Call Fn. Delete after data
-            printf("\nAll Data in Linked List AFTER DELETED\n");
+            printf("\nAll Data in Linked List BEFORE DELETED\n");
             ShowAllNode(); // Call Fn. Show all node
             break;
         case 'X':

@@ -108,7 +108,7 @@ int main() // MAIN Fn.
     p = Allocate();     // Create HEAD Node
     p->info = HeadData; // Assign Special data
     p->link = p;        // Link back to Node
-    n = 10;             // Set amount of node
+    n = 3;             // Set amount of node
     CreateNNode(n);     // Call Fn. Create N nodes
     printf("PROGRAM SINGLY CIRCULAR LINKED LIST \n");
     printf("======================================== \n");
