@@ -5,10 +5,10 @@
 #include <math.h>
 
 #define MAX 100
-#define MAXTREE 32
+#define MAXTREE 128
 
 /*==================================
-  Structure of Tree Node
+  Tree Node
 ==================================*/
 typedef struct Node
 {
@@ -24,7 +24,7 @@ Node *stack[MAX];
 int top = -1;
 
 /*==================================
-  Array Representation For ShowTree
+  Tree Array
 ==================================*/
 char treeArray[MAXTREE];
 
@@ -33,10 +33,13 @@ char treeArray[MAXTREE];
 ==================================*/
 void push(Node *p)
 {
-    if(top < MAX - 1)
+    if(top >= MAX - 1)
     {
-        stack[++top] = p;
+        printf("Error : Stack Overflow\n");
+        exit(1);
     }
+
+    stack[++top] = p;
 }
 
 /*==================================
@@ -45,7 +48,9 @@ void push(Node *p)
 Node *pop()
 {
     if(top < 0)
+    {
         return NULL;
+    }
 
     return stack[top--];
 }
@@ -55,9 +60,13 @@ Node *pop()
 ==================================*/
 Node *createNode(char ch)
 {
-    Node *newNode;
+    Node *newNode = (Node *)malloc(sizeof(Node));
 
-    newNode = (Node *)malloc(sizeof(Node));
+    if(newNode == NULL)
+    {
+        printf("Memory Allocation Failed\n");
+        exit(1);
+    }
 
     newNode->data = ch;
     newNode->left = NULL;
@@ -73,11 +82,13 @@ Node *buildTree(char postfix[])
 {
     int i;
 
+    top = -1;
+
     for(i = 0; postfix[i] != '\0'; i++)
     {
         char ch = postfix[i];
 
-        if(ch == ' ')
+        if(ch == ' ' || ch == '\n')
             continue;
 
         if(isalnum(ch))
@@ -89,6 +100,12 @@ Node *buildTree(char postfix[])
             Node *right = pop();
             Node *left = pop();
 
+            if(left == NULL || right == NULL)
+            {
+                printf("Invalid Postfix Expression\n");
+                exit(1);
+            }
+
             Node *op = createNode(ch);
 
             op->left = left;
@@ -98,11 +115,19 @@ Node *buildTree(char postfix[])
         }
     }
 
-    return pop();
+    Node *root = pop();
+
+    if(root == NULL || top != -1)
+    {
+        printf("Invalid Postfix Expression\n");
+        exit(1);
+    }
+
+    return root;
 }
 
 /*==================================
-  Tree -> Array
+  Tree To Array
 ==================================*/
 void fillArray(Node *root, int index)
 {
@@ -119,64 +144,62 @@ void fillArray(Node *root, int index)
 }
 
 /*==================================
-  Show Tree (Same Style as Document)
+  Display Tree
 ==================================*/
 void showTree()
 {
-    int j, level, start, ends;
-
-    j = 1;
-    level = 1;
+    int level, j;
+    int start, end;
 
     printf("\n");
 
-    while(level <= 5)
+    for(level = 1; level <= 5; level++)
     {
-        start = (int)pow(2, level) / 2;
-        ends = (int)pow(2, level) - 1;
+        start = (int)pow(2, level - 1);
+        end   = (int)pow(2, level) - 1;
 
-        for(j = start; j <= ends; j++)
+        for(j = start; j <= end; j++)
         {
-            if(treeArray[j] != 0)
+            if(treeArray[j] == 0)
+                continue;
+
+            switch(level)
             {
-                switch(level)
-                {
-                    case 1:
+                case 1:
+                    printf("%40c", treeArray[j]);
+                    break;
+
+                case 2:
+                    if(j == 2)
+                        printf("%20c", treeArray[j]);
+                    else
                         printf("%40c", treeArray[j]);
-                        break;
+                    break;
 
-                    case 2:
-                        if(j == 2)
-                            printf("%20c", treeArray[j]);
-                        else
-                            printf("%40c", treeArray[j]);
-                        break;
+                case 3:
+                    if(j == 4)
+                        printf("%10c", treeArray[j]);
+                    else
+                        printf("%20c", treeArray[j]);
+                    break;
 
-                    case 3:
-                        if(j == 4)
-                            printf("%10c", treeArray[j]);
-                        else
-                            printf("%20c", treeArray[j]);
-                        break;
+                case 4:
+                    if(j == 8)
+                        printf("%5c", treeArray[j]);
+                    else
+                        printf("%10c", treeArray[j]);
+                    break;
 
-                    case 4:
-                        if(j == 8)
-                            printf("%5c", treeArray[j]);
-                        else
-                            printf("%10c", treeArray[j]);
-                        break;
-
-                    case 5:
-                        if(j == 16)
-                            printf("%c", treeArray[j]);
-                        else
-                            printf("%5c", treeArray[j]);
-                        break;
-                }
+                case 5:
+                    if(j == 16)
+                        printf("%c", treeArray[j]);
+                    else
+                        printf("%5c", treeArray[j]);
+                    break;
             }
         }
+
         printf("\n");
-        level++;
     }
 }
 
@@ -185,28 +208,34 @@ void showTree()
 ==================================*/
 void preorder(Node *root)
 {
-    if(root != NULL)
-    {
-        printf("%c ", root->data);
+    if(root == NULL)
+        return;
 
-        preorder(root->left);
-        preorder(root->right);
-    }
+    printf("%c ", root->data);
+
+    preorder(root->left);
+    preorder(root->right);
 }
 
 /*==================================
-  InOrder
+  InOrder (with parentheses)
 ==================================*/
 void inorder(Node *root)
 {
-    if(root != NULL)
-    {
-        inorder(root->left);
+    if(root == NULL)
+        return;
 
-        printf("%c ", root->data);
+    if(!isalnum(root->data))
+        printf("(");
 
-        inorder(root->right);
-    }
+    inorder(root->left);
+
+    printf("%c", root->data);
+
+    inorder(root->right);
+
+    if(!isalnum(root->data))
+        printf(")");
 }
 
 /*==================================
@@ -214,13 +243,27 @@ void inorder(Node *root)
 ==================================*/
 void postorder(Node *root)
 {
-    if(root != NULL)
-    {
-        postorder(root->left);
-        postorder(root->right);
+    if(root == NULL)
+        return;
 
-        printf("%c ", root->data);
-    }
+    postorder(root->left);
+    postorder(root->right);
+
+    printf("%c ", root->data);
+}
+
+/*==================================
+  Free Tree
+==================================*/
+void freeTree(Node *root)
+{
+    if(root == NULL)
+        return;
+
+    freeTree(root->left);
+    freeTree(root->right);
+
+    free(root);
 }
 
 /*==================================
@@ -236,20 +279,19 @@ int main()
     printf("========================================\n");
 
     printf("Enter Postfix : ");
-    scanf("%99s", postfix);
+    fgets(postfix, sizeof(postfix), stdin);
 
     root = buildTree(postfix);
 
     memset(treeArray, 0, sizeof(treeArray));
     fillArray(root, 1);
 
-    printf("\n");
-    printf("TREE STRUCTURE\n");
+    printf("\nTREE STRUCTURE\n");
     printf("========================================\n");
 
     showTree();
 
-    printf("PreOrder  : ");
+    printf("\nPreOrder  : ");
     preorder(root);
 
     printf("\n");
@@ -263,6 +305,8 @@ int main()
     postorder(root);
 
     printf("\n");
+
+    freeTree(root);
 
     return 0;
 }
