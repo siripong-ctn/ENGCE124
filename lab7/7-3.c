@@ -1,133 +1,130 @@
+/*
+ Program Create Binary Expression Tree From POSTFIX
+
+ Input :
+ AB+C*
+
+ Expression :
+ (A+B)*C
+
+ Show :
+ 1. Tree Structure
+ 2. PreOrder Traversal
+ 3. InOrder Traversal
+ 4. PostOrder Traversal
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-#define MAXNODE 100
-char postfix[80] = {"862*-"};
+#define MaxNode 100
 
 typedef struct Node
 {
-    char data;
-    struct Node *left;
-    struct Node *right;
+    char info;
+    struct Node *lson;
+    struct Node *rson;
 }Node;
 
-/* ================= STACK ================= */
+Node *stack[MaxNode];
+int top=-1;
 
-Node *stack[MAXNODE];
-int top = -1;
-
-void push(Node *p)
-{
-    stack[++top] = p;
+void Push(Node *p) {
+    stack[++top]=p;
 }
 
-Node *pop()
-{
+Node *Pop() {
     return stack[top--];
 }
 
-/* ================= CREATE NODE ================= */
-
-Node *newNode(char ch)
-{
+Node *Allocate(char ch) {
     Node *p;
-    p = (Node *)malloc(sizeof(Node));
-    p->data = ch;
-    p->left = NULL;
-    p->right = NULL;
+    p=(Node*)malloc(sizeof(Node));
+    p->info=ch;
+    p->lson=NULL;
+    p->rson=NULL;
     return p;
 }
 
-/* ================= BUILD TREE ================= */
-
-Node *buildTree(char postfix[])
-{
-    int i = 0;
-    while(postfix[i] != '\0')
-    {
-        char ch = postfix[i];
-        if(isalnum(ch))
-        {
-            push(newNode(ch));
+Node *CreateExpressionTree(char postfix[]) {
+    int i=0;
+    char ch;
+    while(postfix[i]!='\0') {
+        ch=postfix[i];
+        if(isalnum(ch)) {
+            Push(Allocate(ch));
         }
-        else
-        {
-            Node *op = newNode(ch);
-            op->right = pop();
-            op->left = pop();
-            push(op);
+        else {
+            Node *op=Allocate(ch);
+            op->rson=Pop();
+            op->lson=Pop();
+            Push(op);
         }
         i++;
     }
-    return pop();
+    return Pop();
 }
 
-/* ================= ARRAY FOR SHOW TREE ================= */
+char TreeArray[MaxNode];
 
-char treeArray[MAXNODE];
-
-/* แปลง Pointer Tree -> Array */
-
-void FillArray(Node *root,int index)
-{
-    if(root == NULL) {
+void FillArray(Node *root,int index) {
+    if(root==NULL) {
         return;
     }
-    treeArray[index] = root->data;
-    FillArray(root->left,index*2);
-    FillArray(root->right,index*2+1);
+    TreeArray[index]=root->info;
+    FillArray(root->lson,index*2);
+    FillArray(root->rson,index*2+1);
 }
 
-/* ================= SHOW TREE ================= */
-
-void ShowTree()
-{
-    int level,start,end,j;
-    level = 1;
-    j = 1;
-    printf("\n");
-    while(j < MAXNODE && treeArray[j] != '\0')
-    {
-        start = (1 << (level-1));
-        end   = (1 << level) - 1;
-        for(j=start;j<=end;j++)
-        {
-            if(treeArray[j] != '\0')
-            {
-                switch(level)
-                {
-                    case 1 :
-                        printf("%40c",treeArray[j]);
+void ShowTree() {
+    int level = 1;
+    int start, end;
+    int j;
+    int found;
+    while(level <= 5) {
+        start = (1 << (level - 1));
+        end = (1 << level) - 1;
+        found = 0;
+        for(j = start; j <= end; j++) {
+            if(TreeArray[j] != '\0') {
+                found = 1;
+                break;
+            }
+        }
+        if(!found) {
+            break;
+        }
+        for(j = start; j <= end; j++) {
+            if(TreeArray[j] != '\0') {
+                switch(level) {
+                    case 1:
+                        printf("%40c", TreeArray[j]);
                         break;
-                    case 2 :
-                        if(j==2) {
-                            printf("%20c",treeArray[j]);
-                        } else {
-                            printf("%40c",treeArray[j]);
-                        }
+                    case 2:
+                        if(j == 2)
+                            printf("%20c", TreeArray[j]);
+                        else
+                            printf("%40c", TreeArray[j]);
                         break;
-                    case 3 :
-                        if(j==4) {
-                            printf("%10c",treeArray[j]);
-                        } else {
-                            printf("%20c",treeArray[j]); 
-                        } 
+                    case 3:
+                        if(j == 4)
+                            printf("%10c", TreeArray[j]);
+                        else
+                            printf("%20c", TreeArray[j]);
                         break;
-                    case 4 :
-                        if(j==8) {
-                            printf("%5c",treeArray[j]);
-                        } else {
-                            printf("%10c",treeArray[j]); 
-                        } 
+                    case 4:
+                        if(j == 8)
+                            printf("%5c", TreeArray[j]);
+                        else
+                            printf("%10c", TreeArray[j]);
                         break;
-                    case 5 :
-                        if(j==16) {
-                            printf("%c",treeArray[j]);
-                        } else {
-                            printf("%5c",treeArray[j]); 
-                        } 
+                    case 5:
+                        if(j == 16)
+                            printf("%c", TreeArray[j]);
+                        else
+                            printf("%5c", TreeArray[j]);
                         break;
                 }
             }
@@ -137,71 +134,45 @@ void ShowTree()
     }
 }
 
-/* ================= TRAVERSAL ================= */
-
-void PreOrder(Node *root)
-{
-    if(root != NULL)
-    {
-        printf(" %c",root->data);
-        PreOrder(root->left);
-        PreOrder(root->right);
+void PreOrder(Node *pt) {
+    if(pt!=NULL) {
+        printf("%c ",pt->info);
+        PreOrder(pt->lson);
+        PreOrder(pt->rson);
     }
 }
 
-void InOrder(Node *root)
-{
-    if(root != NULL)
-    {
-        InOrder(root->left);
-        printf(" %c",root->data);
-        InOrder(root->right);
+void InOrder(Node *pt) {
+    if(pt!=NULL) {
+        InOrder(pt->lson);
+        printf("%c ",pt->info);
+        InOrder(pt->rson);
     }
 }
 
-void PostOrder(Node *root)
-{
-    if(root != NULL)
-    {
-        PostOrder(root->left);
-        PostOrder(root->right);
-        printf(" %c",root->data);
+void PostOrder(Node *pt) {
+    if(pt!=NULL) {
+        PostOrder(pt->lson);
+        PostOrder(pt->rson);
+        printf("%c ",pt->info);
     }
 }
 
-/* ================= MAIN ================= */
-
-int main()
-{
-    char menu=' ';
+int main() {
+    char postfix[100];
     Node *T;
-    T = buildTree(postfix);
-    memset(treeArray,'\0',sizeof(treeArray));
+    printf("Input Postfix : ");
+    scanf("%s",postfix);
+    T=CreateExpressionTree(postfix);
+    memset(TreeArray,'\0',sizeof(TreeArray));
     FillArray(T,1);
-    while(menu != 'E' && menu != 'e') {
-        printf("\nPROGRAM TREE (POSTFIX POINTER)");
-        printf("\n==================================");
-        ShowTree();
-        printf("\nMENU => P:PreOrder I:InOrder O:PostOrder E:Exit");
-        printf("\n--------------------------------------------------\n");
-        scanf(" %c",&menu);
-        switch(menu) {
-            case 'P':
-                printf("\nPRE ORDER TRAVERSAL : ");
-                PreOrder(T);
-                printf("\n");
-                break;
-            case 'I':
-                printf("\nIN ORDER TRAVERSAL : ");
-                InOrder(T);
-                printf("\n");
-                break;
-            case 'O':
-                printf("\nPOST ORDER TRAVERSAL : ");
-                PostOrder(T);
-                printf("\n");
-                break;
-        }
-    }
+    printf("===TREE EXPRESSION===\n");
+    ShowTree();
+    printf("\nPRE ORDER TRAVERSAL : ");
+    PreOrder(T);
+    printf("\nIN ORDER TRAVERSAL  : ");
+    InOrder(T);
+    printf("\nPOST ORDER TRAVERSAL: ");
+    PostOrder(T);
     return 0;
 }
