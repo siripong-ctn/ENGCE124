@@ -157,7 +157,7 @@ int main()
         }
         ShowTree(); // Show tree structure
         printf("\nMENU => P:PreOrder I:InOrder O:PostOrder E:Exit");
-        printf("\n-------------------------------------------------------------------------\n");
+        printf("\n-----------------------------------------------\n");
         //ch = getch();
         scanf(" %c", &ch); // GCC/MinGW not working for conio.h -> getch()
         switch (ch)
@@ -165,17 +165,17 @@ int main()
         case 'P':
             printf("PRE ORDER TRAVERSAL : ");
             PreOrder(T);
-            printf("\n-------------------------------------------------------------------------\n");
+            printf("\n-----------------------------------------------\n");
             break;
         case 'I':
             printf("IN ORDER TRAVERSAL : ");
             InOrder(T);
-            printf("\n-------------------------------------------------------------------------\n");
+            printf("\n-----------------------------------------------\n");
             break;
         case 'O':
             printf("POST ORDER TRAVERSAL : ");
             PostOrder(T);
-            printf("\n-------------------------------------------------------------------------\n");
+            printf("\n-----------------------------------------------\n");
             break;
         } // End Switch...case
     } // End While
