@@ -7,181 +7,262 @@
 #define MAX 100
 #define MAXTREE 128
 
-/* Node ของ Binary Tree */
-typedef struct Node {
-    char data;          // เก็บข้อมูล เช่น A, B, +, -
-    struct Node *left;  // ชี้ไป Node ซ้าย
-    struct Node *right; // ชี้ไป Node ขวา
+typedef struct Node
+{
+    char data;
+    struct Node *left;
+    struct Node *right;
 } Node;
 
-/* Stack สำหรับเก็บ Node */
 Node *stack[MAX];
 int top = -1;
 
-/* Array สำหรับเก็บ Tree */
 char treeArray[MAXTREE];
 
-/* เพิ่ม Node ลง Stack */
-void push(Node *p) {
-    if (top == MAX - 1) { // ตรวจสอบ Stack เต็ม
-        printf("Stack Overflow\n");
+void push(Node *p)
+{
+    if(top >= MAX - 1)
+    {
+        printf("Error : Stack Overflow\n");
         exit(1);
     }
-    stack[++top] = p; // เพิ่ม Node และเลื่อน top
+
+    stack[++top] = p;
 }
 
-/* นำ Node ออกจาก Stack */
-Node *pop() {
-    if (top < 0) {// ถ้า Stack ว่าง
+Node *pop()
+{
+    if(top < 0)
+    {
         return NULL;
     }
-    return stack[top--]; // คืน Node และลด top
+
+    return stack[top--];
 }
 
-/* สร้าง Node ใหม่ */
-Node *createNode(char ch) {
-    Node *p = malloc(sizeof(Node)); // จองหน่วยความจำ
-    if (p == NULL) {// ตรวจสอบการจอง Memory
+Node *createNode(char ch)
+{
+    Node *newNode = (Node *)malloc(sizeof(Node));
+
+    if(newNode == NULL)
+    {
         printf("Memory Allocation Failed\n");
         exit(1);
     }
-    p->data = ch;    // เก็บข้อมูล
-    p->left = NULL;  // เริ่มต้นไม่มีลูกซ้าย
-    p->right = NULL; // เริ่มต้นไม่มีลูกขวา
-    return p; // ส่ง Node กลับ
+
+    newNode->data = ch;
+    newNode->left = NULL;
+    newNode->right = NULL;
+
+    return newNode;
 }
 
-/* สร้าง Expression Tree จาก Postfix */
-Node *buildTree(char postfix[]) {
-    top = -1; // ล้าง Stack ก่อนเริ่ม
-    for (int i = 0; postfix[i]; i++) {// อ่าน Postfix ทีละตัว
+Node *buildTree(char postfix[])
+{
+    int i;
+    top = -1;
+    for(i = 0; postfix[i] != '\0'; i++)
+    {
         char ch = postfix[i];
-        if (isspace(ch)) {// ข้ามช่องว่างและ Enter
+
+        if(ch == ' ' || ch == '\n')
             continue;
+
+        if(isalnum(ch))
+        {
+            push(createNode(ch));
         }
-        if (isalnum(ch)) { // ถ้าเป็น Operand
-            push(createNode(ch)); // สร้าง Node แล้ว Push
-        } else { // ถ้าเป็น Operator
-            Node *right = pop(); // Operand ขวา
-            Node *left = pop();  // Operand ซ้าย
-            if (left == NULL || right == NULL) {
+        else
+        {
+            Node *right = pop();
+            Node *left = pop();
+
+            if(left == NULL || right == NULL)
+            {
                 printf("Invalid Postfix Expression\n");
                 exit(1);
             }
-            Node *op = createNode(ch); // สร้าง Node Operator
-            op->left = left;   // เชื่อมลูกซ้าย
-            op->right = right; // เชื่อมลูกขวา
-            push(op); // Push Tree กลับเข้า Stack
+
+            Node *op = createNode(ch);
+
+            op->left = left;
+            op->right = right;
+
+            push(op);
         }
     }
-    Node *root = pop(); // Node สุดท้ายคือ Root
-    if (root == NULL || top != -1) {// ตรวจสอบ Expression
+
+    Node *root = pop();
+
+    if(root == NULL || top != -1)
+    {
         printf("Invalid Postfix Expression\n");
         exit(1);
     }
-    return root; // ส่ง Root กลับ
+
+    return root;
 }
 
-/* นำ Tree มาเก็บใน Array */
-void fillArray(Node *root, int i) {
-    if (root == NULL || i >= MAXTREE) { // ถ้าไม่มี Node หรือเกินขนาด
+void fillArray(Node *root, int index)
+{
+    if(root == NULL)
         return;
-    }
-    treeArray[i] = root->data; // เก็บข้อมูลลง Array
-    fillArray(root->left, i * 2);      // ลูกซ้าย = 2i
-    fillArray(root->right, i * 2 + 1); // ลูกขวา = 2i+1
+
+    if(index >= MAXTREE)
+        return;
+
+    treeArray[index] = root->data;
+
+    fillArray(root->left, index * 2);
+    fillArray(root->right, index * 2 + 1);
 }
 
-/* แสดงโครงสร้าง Tree */
-void showTree() {
-    for (int level = 1; level <= 5; level++) {
-        int start = 1 << (level - 1); // จุดเริ่มต้นของแต่ละ Level
-        int end = (1 << level) - 1;   // จุดสิ้นสุดของแต่ละ Level
-        for (int i = start; i <= end; i++) {
-            if (treeArray[i] == 0) {// ถ้าไม่มี Node
+void showTree()
+{
+    int level, j;
+    int start, end;
+
+    printf("\n");
+
+    for(level = 1; level <= 5; level++)
+    {
+        start = (int)pow(2, level - 1);
+        end   = (int)pow(2, level) - 1;
+
+        for(j = start; j <= end; j++)
+        {
+            if(treeArray[j] == 0)
                 continue;
-            }
-            /* กำหนดระยะห่างเพื่อให้มีลักษณะเป็น Tree */
-            if (i == start) {
-                printf("%*c", 40 / (1 << (level - 1)), treeArray[i]);
-            }
-            else {
-                printf("%*c", 40 / (1 << (level - 2 > 0 ? level - 2 : 0)), treeArray[i]);
+
+            switch(level)
+            {
+                case 1:
+                    printf("%40c", treeArray[j]);
+                    break;
+
+                case 2:
+                    if(j == 2)
+                        printf("%20c", treeArray[j]);
+                    else
+                        printf("%40c", treeArray[j]);
+                    break;
+
+                case 3:
+                    if(j == 4)
+                        printf("%10c", treeArray[j]);
+                    else
+                        printf("%20c", treeArray[j]);
+                    break;
+
+                case 4:
+                    if(j == 8)
+                        printf("%5c", treeArray[j]);
+                    else
+                        printf("%10c", treeArray[j]);
+                    break;
+
+                case 5:
+                    if(j == 16)
+                        printf("%c", treeArray[j]);
+                    else
+                        printf("%5c", treeArray[j]);
+                    break;
             }
         }
+
         printf("\n");
     }
 }
 
-/* แสดง Preorder : Root -> Left -> Right */
-void preorder(Node *root) {
-    if (root == NULL) {
+void preorder(Node *root)
+{
+    if(root == NULL)
         return;
-    }
-    printf("%c ", root->data); // แสดง Root
-    preorder(root->left);      // ไปซ้าย
-    preorder(root->right);     // ไปขวา
-}
-/* แสดง Inorder : Left -> Root -> Right */
-void inorder(Node *root) {
-    if (root == NULL) {
-        return;
-    }
-    if (!isalnum(root->data)) {// ถ้าเป็น Operator
-        printf("(");          // ใส่วงเล็บเปิด
-    }
-    inorder(root->left);      // ไปซ้าย
-    printf("%c", root->data); // แสดง Root
-    inorder(root->right);     // ไปขวา
-    if (!isalnum(root->data)) {// ถ้าเป็น Operator
-        printf(")");          // ใส่วงเล็บปิด
-    }
+
+    printf("%c ", root->data);
+
+    preorder(root->left);
+    preorder(root->right);
 }
 
-/* แสดง Postorder : Left -> Right -> Root */
-void postorder(Node *root) {
-    if (root == NULL) {
+void inorder(Node *root)
+{
+    if(root == NULL)
         return;
-    }
-    postorder(root->left);     // ไปซ้าย
-    postorder(root->right);    // ไปขวา
-    printf("%c ", root->data); // แสดง Root
+
+    if(!isalnum(root->data))
+        printf("(");
+
+    inorder(root->left);
+
+    printf("%c", root->data);
+
+    inorder(root->right);
+
+    if(!isalnum(root->data))
+        printf(")");
 }
 
-/* ลบ Node ทั้งหมดใน Tree */
-void freeTree(Node *root) {
-    if (root == NULL) {
+void postorder(Node *root)
+{
+    if(root == NULL)
         return;
-    }
-    freeTree(root->left);  // ลบ Subtree ซ้าย
-    freeTree(root->right); // ลบ Subtree ขวา
-    free(root);            // ลบ Node ปัจจุบัน
+
+    postorder(root->left);
+    postorder(root->right);
+
+    printf("%c ", root->data);
 }
 
-/* โปรแกรมหลัก */
-int main() {
+void freeTree(Node *root)
+{
+    if(root == NULL)
+        return;
+
+    freeTree(root->left);
+    freeTree(root->right);
+
+    free(root);
+}
+
+int main()
+{
     char postfix[MAX];
     Node *root;
 
+    printf("========================================\n");
+    printf(" Postfix To Binary Expression Tree\n");
+    printf("========================================\n");
+
     printf("Enter Postfix : ");
-    fgets(postfix, MAX, stdin); // รับ Postfix จากผู้ใช้
+    fgets(postfix, sizeof(postfix), stdin);
 
-    root = buildTree(postfix); // สร้าง Expression Tree
+    root = buildTree(postfix);
 
-    memset(treeArray, 0, sizeof(treeArray)); // เคลียร์ Array
-    fillArray(root, 1);                      // เก็บ Tree เริ่มที่ตำแหน่ง 1
+    memset(treeArray, 0, sizeof(treeArray));
+    fillArray(root, 1);
 
     printf("TREE STRUCTURE\n");
     printf("========================================\n");
-    showTree(); // แสดง Tree
+
+    showTree();
 
     printf("\nPreOrder  : ");
-    preorder(root); // แสดง Preorder
-    printf("\nInOrder   : ");
-    inorder(root); // แสดง Inorder
-    printf("\nPostOrder : ");
-    postorder(root); // แสดง Postorder
-    freeTree(root); // คืน Memory
+    preorder(root);
 
-    return 0; // จบโปรแกรม
+    printf("\n");
+
+    printf("InOrder   : ");
+    inorder(root);
+
+    printf("\n");
+
+    printf("PostOrder : ");
+    postorder(root);
+
+    printf("\n");
+
+    freeTree(root);
+
+    return 0;
 }
