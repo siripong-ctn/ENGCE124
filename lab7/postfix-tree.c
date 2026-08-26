@@ -1,268 +1,214 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <math.h>
 
 #define MAX 100
-#define MAXTREE 128
+#define SEQ_SIZE 128
 
 typedef struct Node
 {
-    char data;
-    struct Node *left;
-    struct Node *right;
+    char info;
+    struct Node *lson;
+    struct Node *rson;
 } Node;
 
 Node *stack[MAX];
 int top = -1;
 
-char treeArray[MAXTREE];
+/* Create Node */
+Node *CreateNode(char ch) {
+    Node *p = (Node *)malloc(sizeof(Node));
+    p->info = ch;
+    p->lson = NULL;
+    p->rson = NULL;
+    return p;
+}
 
-void push(Node *p)
-{
-    if(top >= MAX - 1)
-    {
-        printf("Error : Stack Overflow\n");
+/* Check Operator */
+int IsOperator(char ch) {
+    return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^';
+}
+
+/* Push */
+void Push(Node *p) {
+    if (top >= MAX - 1) {
+        printf("Stack Overflow\n");
         exit(1);
     }
-
     stack[++top] = p;
 }
 
-Node *pop()
-{
-    if(top < 0)
-    {
-        return NULL;
-    }
-
-    return stack[top--];
-}
-
-Node *createNode(char ch)
-{
-    Node *newNode = (Node *)malloc(sizeof(Node));
-
-    if(newNode == NULL)
-    {
-        printf("Memory Allocation Failed\n");
-        exit(1);
-    }
-
-    newNode->data = ch;
-    newNode->left = NULL;
-    newNode->right = NULL;
-
-    return newNode;
-}
-
-Node *buildTree(char postfix[])
-{
-    int i;
-    top = -1;
-    for(i = 0; postfix[i] != '\0'; i++)
-    {
-        char ch = postfix[i];
-
-        if(ch == ' ' || ch == '\n')
-            continue;
-
-        if(isalnum(ch))
-        {
-            push(createNode(ch));
-        }
-        else
-        {
-            Node *right = pop();
-            Node *left = pop();
-
-            if(left == NULL || right == NULL)
-            {
-                printf("Invalid Postfix Expression\n");
-                exit(1);
-            }
-
-            Node *op = createNode(ch);
-
-            op->left = left;
-            op->right = right;
-
-            push(op);
-        }
-    }
-
-    Node *root = pop();
-
-    if(root == NULL || top != -1)
-    {
+/* Pop */
+Node *Pop() {
+    if (top < 0) {
         printf("Invalid Postfix Expression\n");
         exit(1);
     }
-
-    return root;
+    return stack[top--];
 }
 
-void fillArray(Node *root, int index)
-{
-    if(root == NULL)
-        return;
-
-    if(index >= MAXTREE)
-        return;
-
-    treeArray[index] = root->data;
-
-    fillArray(root->left, index * 2);
-    fillArray(root->right, index * 2 + 1);
-}
-
-void showTree()
-{
-    int level, j;
-    int start, end;
-
-    printf("\n");
-
-    for(level = 1; level <= 5; level++)
-    {
-        start = (int)pow(2, level - 1);
-        end   = (int)pow(2, level) - 1;
-
-        for(j = start; j <= end; j++)
-        {
-            if(treeArray[j] == 0)
-                continue;
-
-            switch(level)
-            {
-                case 1:
-                    printf("%40c", treeArray[j]);
-                    break;
-
-                case 2:
-                    if(j == 2)
-                        printf("%20c", treeArray[j]);
-                    else
-                        printf("%40c", treeArray[j]);
-                    break;
-
-                case 3:
-                    if(j == 4)
-                        printf("%10c", treeArray[j]);
-                    else
-                        printf("%20c", treeArray[j]);
-                    break;
-
-                case 4:
-                    if(j == 8)
-                        printf("%5c", treeArray[j]);
-                    else
-                        printf("%10c", treeArray[j]);
-                    break;
-
-                case 5:
-                    if(j == 16)
-                        printf("%c", treeArray[j]);
-                    else
-                        printf("%5c", treeArray[j]);
-                    break;
+/* Create Expression Tree */
+Node *CreateTree(char postfix[]) {
+    int i;
+    char ch;
+    Node *left, *right, *p;
+    top = -1;
+    for (i = 0; postfix[i] != '\0'; i++) {
+        ch = postfix[i];
+        if (ch == ' ') { 
+            continue; 
+        }
+        if (!IsOperator(ch)) { // Check is ch a Operand
+            Push(CreateNode(ch)); // Create new node and Push into stack
+        } else { // Check is ch a Operator
+            if (top < 1) { // Operator must has Operand at least 2 stack
+                printf("Invalid Postfix Expression\n");
+                exit(1);
             }
+            right = Pop(); // Get Operand top pop right
+            left = Pop(); // Get Operand top-1 pop left
+            p = CreateNode(ch); // Create Node Operator
+            p->lson = left; // Node Operator lson link to left
+            p->rson = right; // Node Operator rson link to right
+            Push(p); // Push Node P into stack
+        }
+    }
+    if (top != 0) { // When end for() must have only 1 tree
+        printf("Invalid Postfix Expression\n");
+        exit(1);
+    }
+    return Pop();
+}
+
+/* Tree Height */
+int Height(Node *p) {
+    int lh, rh; // Store height tree into lh and rh
+    if (p == NULL) { // If tree has no Node 
+        return 0; // Height = 0
+    }
+    lh = Height(p->lson); // Get Height from Subtree left
+    rh = Height(p->rson); // Get Height from Subtree right
+    return (lh > rh ? lh : rh) + 1; // Get Hieghtest+1 for Node current
+}
+
+/* Convert Pointer Tree to Sequence */
+void MakeSequence(Node *p, Node *seq[], int pos) {
+    if (p == NULL || pos >= SEQ_SIZE) { // Stop when Node is NULL OR position > Array
+        return;
+    }
+    seq[pos] = p;
+    MakeSequence(p->lson, seq, pos * 2); // Store Node lson into Array
+    MakeSequence(p->rson, seq, pos * 2 + 1); // Store Node rson into Array
+}
+
+/* Show Tree Vertically */
+void ShowTree(Node *T)
+{
+    Node *seq[SEQ_SIZE] = {NULL}; // Create Array store Node and set NULL
+
+    int h;
+    int level;
+    int start, end;
+    int j;
+    int leftPadding;
+    int betweenPadding;
+
+    MakeSequence(T, seq, 1); // Convert Tree into Sequence
+
+    h = Height(T); // Store Hight T into h
+
+    for (level = 1; level <= h; level++) // for level to h
+    {
+        start = 1 << (level - 1); // Find first position from every level
+        end   = (1 << level) - 1; // Find last position from every level
+
+        leftPadding    = (1 << (h - level + 1)) - 1; // Calculate space from left screen for Center Root
+        betweenPadding = (1 << (h - level + 2)) - 1; // Calculare space between Node
+
+        printf("%*s", leftPadding, ""); // Space before printf First Node
+
+        for (j = start; j <= end; j++) 
+        {
+            if (seq[j] != NULL) // If has Node printf data
+                printf("%c", seq[j]->info);
+            else // If not printf space for safe position
+                printf(" ");
+            if (j != end) // Make space between Node in same level
+                printf("%*s", betweenPadding, "");
         }
 
-        printf("\n");
+        printf("\n"); // New line when end of level
     }
 }
 
-void preorder(Node *root)
-{
-    if(root == NULL)
-        return;
-
-    printf("%c ", root->data);
-
-    preorder(root->left);
-    preorder(root->right);
+/* PreOrder Traversal R->TL->TR */
+void PreOrder(Node *p) {
+    if (p != NULL) {
+        printf(" %c", p->info); 
+        PreOrder(p->lson);
+        PreOrder(p->rson);
+    }
 }
 
-void inorder(Node *root)
-{
-    if(root == NULL)
-        return;
-
-    if(!isalnum(root->data))
-        printf("(");
-
-    inorder(root->left);
-
-    printf("%c", root->data);
-
-    inorder(root->right);
-
-    if(!isalnum(root->data))
-        printf(")");
+/* InOrder Traversal TL->R->TR */
+void InOrder(Node *p) {
+    if (p != NULL) {
+        if (IsOperator(p->info)) { // If Node a Operator
+            printf("(");
+        }
+        InOrder(p->lson);
+        printf("%c", p->info);
+        InOrder(p->rson);
+        if (IsOperator(p->info)) { // If Node a Operator
+            printf(")");
+        }
+    }
 }
 
-void postorder(Node *root)
-{
-    if(root == NULL)
-        return;
-
-    postorder(root->left);
-    postorder(root->right);
-
-    printf("%c ", root->data);
+/* PostOrder Traversal TL->TR->R*/
+void PostOrder(Node *p) {
+    if (p != NULL) {
+        PostOrder(p->lson);
+        PostOrder(p->rson);
+        printf(" %c", p->info);
+    }
 }
 
-void freeTree(Node *root)
-{
-    if(root == NULL)
-        return;
-
-    freeTree(root->left);
-    freeTree(root->right);
-
-    free(root);
+/* Free Memory */
+void FreeTree(Node *p) {
+    if (p != NULL) { // Free Memory like Postorder for not Memory Leak
+        FreeTree(p->lson);
+        FreeTree(p->rson);
+        free(p);
+    }
 }
 
-int main()
-{
+/* Main */
+int main() {
     char postfix[MAX];
-    Node *root;
-
-    printf("========================================\n");
-    printf(" Postfix To Binary Expression Tree\n");
-    printf("========================================\n");
-
+    Node *T;
     printf("Enter Postfix : ");
-    fgets(postfix, sizeof(postfix), stdin);
 
-    root = buildTree(postfix);
+    fgets(postfix, MAX, stdin); // Get Input into value postfix Input < MAX , Get input from keyboard
+    postfix[strcspn(postfix, "\n")] = '\0'; // Cut Enter(\n) out
 
-    memset(treeArray, 0, sizeof(treeArray));
-    fillArray(root, 1);
+    T = CreateTree(postfix);
 
+    printf("=====================================\n");
     printf("TREE STRUCTURE\n");
-    printf("========================================\n");
+    printf("=====================================\n");
 
-    showTree();
+    ShowTree(T);
 
-    printf("\nPreOrder  : ");
-    preorder(root);
-
-    printf("\n");
-
-    printf("InOrder   : ");
-    inorder(root);
-
-    printf("\n");
-
-    printf("PostOrder : ");
-    postorder(root);
-
-    printf("\n");
-
-    freeTree(root);
+    printf("=====================================\n");
+    printf("PRE ORDER  : ");
+    PreOrder(T);
+    printf("\nIN ORDER   : ");
+    InOrder(T);
+    printf("\nPOST ORDER : ");
+    PostOrder(T);
+    printf("\n=====================================\n");
+    FreeTree(T);
 
     return 0;
 }
