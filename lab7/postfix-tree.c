@@ -93,7 +93,7 @@ int Height(Node *p) {
 
 /* Convert Pointer Tree to Sequence */
 void MakeSequence(Node *p, Node *seq[], int pos) {
-    if (p == NULL || pos >= SEQ_SIZE) { // Stop when Node is NULL OR position > Array
+    if (p == NULL || pos >= SEQ_SIZE) { // Stop when Node is NULL OR position >= SEQ_SIZE
         return;
     }
     seq[pos] = p;
@@ -102,48 +102,47 @@ void MakeSequence(Node *p, Node *seq[], int pos) {
 }
 
 /* Show Tree Vertically */
-void ShowTree(Node *T)
-{
+void ShowTree(Node *T) {
     Node *seq[SEQ_SIZE] = {NULL}; // Create Array store Node and set NULL
-
-    int h;
-    int level;
-    int start, end;
-    int j;
-    int leftPadding;
-    int betweenPadding;
+    int level, start, end, j;
 
     MakeSequence(T, seq, 1); // Convert Tree into Sequence
 
-    h = Height(T); // Store Hight T into h
+    for (level = 1; level <= 5; level++) {
+        start = 1 << (level - 1); // Find first position from every level 
+        // start = 1 << (1 - 1);
+        // start = 1 << 0;
+        // start = 1, 2, 4, 8 ...;
+        end = (1 << level) - 1; // Find last position from every level
+        // end = (1 << 1) - 1;
+        // end = 2 - 1;
+        // end = 1, 3, 7, 15 ...;
 
-    for (level = 1; level <= h; level++) // for level to h
-    {
-        start = 1 << (level - 1); // Find first position from every level
-        end   = (1 << level) - 1; // Find last position from every level
+        for (j = start; j <= end; j++) {
+            if (seq[j] != NULL) { // If has Node
+                if (level == 1)
+                    printf("%40c", seq[j]->info);
 
-        leftPadding    = (1 << (h - level + 1)) - 1; // Calculate space from left screen for Center Root
-        betweenPadding = (1 << (h - level + 2)) - 1; // Calculare space between Node
+                else if (level == 2)
+                    printf(j == 2 ? "%20c" : "%40c", seq[j]->info);
 
-        printf("%*s", leftPadding, ""); // Space before printf First Node
+                else if (level == 3)
+                    printf(j == 4 ? "%10c" : "%20c", seq[j]->info);
 
-        for (j = start; j <= end; j++) 
-        {
-            if (seq[j] != NULL) // If has Node printf data
-                printf("%c", seq[j]->info);
-            else // If not printf space for safe position
-                printf(" ");
-            if (j != end) // Make space between Node in same level
-                printf("%*s", betweenPadding, "");
+                else if (level == 4)
+                    printf(j == 8 ? "%5c" : "%10c", seq[j]->info);
+
+                else
+                    printf(j == 16 ? "%c" : "%5c", seq[j]->info);
+            }
         }
-
-        printf("\n"); // New line when end of level
+        printf("\n");
     }
 }
 
 /* PreOrder Traversal R->TL->TR */
 void PreOrder(Node *p) {
-    if (p != NULL) {
+    if (p != NULL) { // p = B
         printf(" %c", p->info); 
         PreOrder(p->lson);
         PreOrder(p->rson);
@@ -153,21 +152,15 @@ void PreOrder(Node *p) {
 /* InOrder Traversal TL->R->TR */
 void InOrder(Node *p) {
     if (p != NULL) {
-        if (IsOperator(p->info)) { // If Node a Operator
-            printf("(");
-        }
         InOrder(p->lson);
-        printf("%c", p->info);
+        printf(" %c", p->info);
         InOrder(p->rson);
-        if (IsOperator(p->info)) { // If Node a Operator
-            printf(")");
-        }
     }
 }
 
 /* PostOrder Traversal TL->TR->R*/
 void PostOrder(Node *p) {
-    if (p != NULL) {
+    if (p != NULL) { // p = B
         PostOrder(p->lson);
         PostOrder(p->rson);
         printf(" %c", p->info);
@@ -176,7 +169,7 @@ void PostOrder(Node *p) {
 
 /* Free Memory */
 void FreeTree(Node *p) {
-    if (p != NULL) { // Free Memory like Postorder for not Memory Leak
+    if (p != NULL) { // p = A
         FreeTree(p->lson);
         FreeTree(p->rson);
         free(p);
