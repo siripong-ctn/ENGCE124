@@ -112,14 +112,14 @@ void ShowTree(Node *T) {
         start = 1 << (level - 1); // Find first position from every level 
         // start = 1 << (1 - 1);
         // start = 1 << 0;
-        // start = 1, 2, 4, 8 ...;
+        // start = 1, 2, 4, 8 , 16, 32 ...;
         end = (1 << level) - 1; // Find last position from every level
         // end = (1 << 1) - 1;
         // end = 2 - 1;
-        // end = 1, 3, 7, 15 ...;
+        // end = 1, 3, 7, 15 , 31, 63 ...;
 
         for (j = start; j <= end; j++) {
-            if (seq[j] != NULL) { // If has Node
+            if (seq[j] != NULL) { // If Array that has Node
                 if (level == 1)
                     printf("%40c", seq[j]->info);
 
