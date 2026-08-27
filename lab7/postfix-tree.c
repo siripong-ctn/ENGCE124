@@ -41,7 +41,7 @@ void Push(Node *p) {
 /* Pop */
 Node *Pop() {
     if (top < 0) {
-        printf("Invalid Postfix Expression\n");
+        printf("Stack Underflow\n");
         exit(1);
     }
     return stack[top--];
@@ -102,41 +102,57 @@ void MakeSequence(Node *p, Node *seq[], int pos) {
 }
 
 /* Show Tree Vertically */
-void ShowTree(Node *T) {
+void ShowTree(Node *T)
+{
     Node *seq[SEQ_SIZE] = {NULL}; // Create Array store Node and set NULL
-    int level, start, end, j;
+
+    int h;
+    int level;
+    int start, end;
+    int j;
+    int leftPadding;
+    int betweenPadding;
 
     MakeSequence(T, seq, 1); // Convert Tree into Sequence
 
-    for (level = 1; level <= 5; level++) {
+    h = Height(T); // Store Hight T into h
+
+    for (level = 1; level <= h; level++) // for level to h
+    {
+        // If level = 1, h = 2 (AB+)
         start = 1 << (level - 1); // Find first position from every level 
         // start = 1 << (1 - 1);
         // start = 1 << 0;
-        // start = 1, 2, 4, 8 , 16, 32 ...;
-        end = (1 << level) - 1; // Find last position from every level
+        // start = 1;
+        end   = (1 << level) - 1; // Find last position from every level
         // end = (1 << 1) - 1;
         // end = 2 - 1;
-        // end = 1, 3, 7, 15 , 31, 63 ...;
+        // end = 1;
 
-        for (j = start; j <= end; j++) {
-            if (seq[j] != NULL) { // If Array that has Node
-                if (level == 1)
-                    printf("%40c", seq[j]->info);
+        leftPadding    = (1 << (h - level + 1)) - 1; // Calculate space from left screen for Center Root
+        // leftPadding = (1 << (2 - 1 + 1)) - 1;
+        // leftPadding = (1 << 2) - 1;
+        // leftPadding = 4 - 1;
+        // leftPadding = 3;
+        betweenPadding = (1 << (h - level + 2)) - 1; // Calculare space between Node
+        // betweenPadding = (1 << (2 - 1 + 2)) - 1;
+        // betweenPadding = (1 << 3) - 1;
+        // betweenPadding = 8 - 1;
+        // betweenPadding = 7;
 
-                else if (level == 2)
-                    printf(j == 2 ? "%20c" : "%40c", seq[j]->info);
+        printf("%*s", leftPadding, ""); // Space before printf First Node
 
-                else if (level == 3)
-                    printf(j == 4 ? "%10c" : "%20c", seq[j]->info);
-
-                else if (level == 4)
-                    printf(j == 8 ? "%5c" : "%10c", seq[j]->info);
-
-                else
-                    printf(j == 16 ? "%c" : "%5c", seq[j]->info);
-            }
+        for (j = start; j <= end; j++) 
+        {
+            if (seq[j] != NULL) // If has Node printf data
+                printf("%c", seq[j]->info);
+            else // If not printf space for safe position
+                printf(" ");
+            if (j != end) // Make space between Node in same level
+                printf("%*s", betweenPadding, "");
         }
-        printf("\n");
+
+        printf("\n"); // New line when end of level
     }
 }
 
