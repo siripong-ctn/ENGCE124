@@ -55,9 +55,6 @@ Node *CreateTree(char postfix[]) {
     top = -1;
     for (i = 0; postfix[i] != '\0'; i++) {
         ch = postfix[i];
-        if (ch == ' ') { 
-            continue; 
-        }
         if (!IsOperator(ch)) { // Check is ch a Operand
             Push(CreateNode(ch)); // Create new node and Push into stack
         } else { // Check is ch a Operator
@@ -102,8 +99,7 @@ void MakeSequence(Node *p, Node *seq[], int pos) {
 }
 
 /* Show Tree Vertically */
-void ShowTree(Node *T)
-{
+void ShowTree(Node *T) {
     Node *seq[SEQ_SIZE] = {NULL}; // Create Array store Node and set NULL
 
     int h;
@@ -117,8 +113,8 @@ void ShowTree(Node *T)
 
     h = Height(T); // Store Hight T into h
 
-    for (level = 1; level <= h; level++) // for level to h
-    {
+    for (level = 1; level <= h; level++) { // for level to h
+    
         // If level = 1, h = 2 (AB+)
         start = 1 << (level - 1); // Find first position from every level 
         // start = 1 << (1 - 1);
@@ -142,8 +138,7 @@ void ShowTree(Node *T)
 
         printf("%*s", leftPadding, ""); // Space before printf First Node
 
-        for (j = start; j <= end; j++) 
-        {
+        for (j = start; j <= end; j++) {
             if (seq[j] != NULL) // If has Node printf data
                 printf("%c", seq[j]->info);
             else // If not printf space for safe position
@@ -198,8 +193,7 @@ int main() {
     Node *T;
     printf("Enter Postfix : ");
 
-    fgets(postfix, MAX, stdin); // Get Input into value postfix Input < MAX , Get input from keyboard
-    postfix[strcspn(postfix, "\n")] = '\0'; // Cut Enter(\n) out
+    scanf("%s",&postfix);
 
     T = CreateTree(postfix);
 
