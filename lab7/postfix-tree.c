@@ -153,7 +153,7 @@ void ShowTree(Node *T) {
 
 /* PreOrder Traversal R->TL->TR */
 void PreOrder(Node *p) {
-    if (p != NULL) { // p = B
+    if (p != NULL) {
         printf(" %c", p->info); 
         PreOrder(p->lson);
         PreOrder(p->rson);
@@ -171,7 +171,7 @@ void InOrder(Node *p) {
 
 /* PostOrder Traversal TL->TR->R*/
 void PostOrder(Node *p) {
-    if (p != NULL) { // p = B
+    if (p != NULL) {
         PostOrder(p->lson);
         PostOrder(p->rson);
         printf(" %c", p->info);
@@ -180,7 +180,7 @@ void PostOrder(Node *p) {
 
 /* Free Memory */
 void FreeTree(Node *p) {
-    if (p != NULL) { // p = A
+    if (p != NULL) {
         FreeTree(p->lson);
         FreeTree(p->rson);
         free(p);
