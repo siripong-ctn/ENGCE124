@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX 100
+#define MAX 64
 #define SEQ_SIZE 128
 
 typedef struct Node
@@ -49,7 +49,7 @@ Node *Pop() {
 
 /* Create Expression Tree */
 Node *CreateTree(char postfix[]) {
-    int i;
+    int i, k;
     char ch;
     Node *left, *right, *p;
     top = -1;
@@ -58,12 +58,18 @@ Node *CreateTree(char postfix[]) {
         if (!IsOperator(ch)) { // Check is ch a Operand
             Push(CreateNode(ch)); // Create new node and Push into stack
         } else { // Check is ch a Operator
-            if (top < 1) { // Operator must has Operand at least 2 stack
-                printf("Invalid Postfix Expression\n");
-                exit(1);
+            if (top < 1) {
+            printf("Not enough Operand\n");
+            for (k = top; k >= 0; k--) {
+                printf("[%d] info = %c\n", k, stack[k]->info);
+                printf("lson = %p\n",stack[k]->lson);
+                printf("rson = %p\n",stack[k]->rson);
+                printf("\n");
             }
-            right = Pop(); // Get Operand top pop right
-            left = Pop(); // Get Operand top-1 pop left
+            exit(1);
+            }
+            right = Pop(); // Get top pop right
+            left = Pop(); // Get top-1 pop left
             p = CreateNode(ch); // Create Node Operator
             p->lson = left; // Node Operator lson link to left
             p->rson = right; // Node Operator rson link to right
@@ -71,7 +77,13 @@ Node *CreateTree(char postfix[]) {
         }
     }
     if (top != 0) { // When end for() must have only 1 tree
-        printf("Invalid Postfix Expression\n");
+        printf("Not enough Operator\n");
+        for (k = top; k >= 0; k--) {
+            printf("[%d] info = %c\n", k, stack[k]->info);
+            printf("lson = %p\n",stack[k]->lson);
+            printf("rson = %p\n",stack[k]->rson);
+            printf("\n");
+        }
         exit(1);
     }
     return Pop();
