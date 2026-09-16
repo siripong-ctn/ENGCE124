@@ -15,8 +15,7 @@ void PrepareRawData(int N)
     int i;
     srand(time(NULL)); // for difference random number in rand()
     for (i = 1; i <= N; i++)
-        //Data[i] = 1 + rand() % 99; // random difference number 1..99
-        Data[i] = i;
+        Data[i] = 1 + rand() % 99; // random difference number 1..99
 }
 void DispData(int N, int out) // Show Data in array 2 format
 {
