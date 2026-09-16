@@ -15,7 +15,8 @@ void PrepareRawData(int N)
     int i;
     srand(time(NULL)); // for difference random number in rand()
     for (i = 1; i <= N; i++)
-        Data[i] = 1 + rand() % 99; // random difference number 1..99
+        //Data[i] = 1 + rand() % 99; // random difference number 1..99
+        Data[i] = i;
 }
 void DispData(int N, int out) // Show Data in array 2 format
 {
@@ -43,7 +44,7 @@ int Minimum(int j) // Find Minimum data in Data[] between j..N
     temp = Data[j]; // set begin value
     for (i = j + 1; i <= N; i++)
     {
-        if (temp > Data[i])
+        if (temp > Data[i]) // < max to min , > min to max
         {
             temp = Data[i]; // change new minimum data
             Location = i;   // keep new Location
