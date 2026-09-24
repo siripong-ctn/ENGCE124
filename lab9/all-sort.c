@@ -185,26 +185,29 @@ int Maximum(int a, int b)
 }
 
 
-void AdjustTree(int LastNode)
+void AdjustTree(int Root, int LastNode)
 {
-    int i, MaxChild;
+    int i = Root;
+    int MaxChild;
+    int temp;
 
-    i = 1;
-
-    while (2 * i <= LastNode)
+    while(2 * i <= LastNode)
     {
-        if (2 * i + 1 <= LastNode)
+        if(2 * i + 1 <= LastNode)
             MaxChild = Maximum(2 * i, 2 * i + 1);
         else
             MaxChild = 2 * i;
 
-        if (Data[i] < Data[MaxChild])
+        if(Data[i] < Data[MaxChild])
         {
-            int temp;
-
             temp = Data[i];
             Data[i] = Data[MaxChild];
             Data[MaxChild] = temp;
+
+            printf("Adjust (%2d,%2d) : ",
+                    i,
+                    MaxChild);
+            DispData(N);
 
             i = MaxChild;
         }
@@ -218,8 +221,8 @@ void CreateHeapTree(int LastNode)
 {
     int i;
 
-    for (i = LastNode / 2; i >= 1; i--)
-        AdjustTree(LastNode);
+    for(i = LastNode / 2 ; i >= 1 ; i--)
+        AdjustTree(i, LastNode);
 }
 
 
@@ -241,10 +244,7 @@ void HeapSort(int N)
         Data[1] = Data[i];
         Data[i] = temp;
 
-        printf("Swap : ");
-        DispData(N);
-
-        AdjustTree(i - 1);
+        AdjustTree(1, i - 1);
     }
 
     printf("Sorted Data : ");
