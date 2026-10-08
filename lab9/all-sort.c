@@ -11,7 +11,7 @@ int OriginalData[MaxData + 1];
 int Data[MaxData + 1];
 int Radix[MaxRow][MaxCol];
 
-int N = 12;
+int N = 4;
 
 
 /* =========================================================
@@ -450,8 +450,9 @@ int main()
 {
     int choice;
 
-    srand(time(NULL));
+    srand(time(NULL)); // Random that number never same
 
+    // N = 6
     /* สุ่มข้อมูลครั้งแรก */
     PrepareRawData(N);
     CopyOriginalData(N);
